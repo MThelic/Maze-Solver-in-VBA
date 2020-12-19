@@ -1,0 +1,11 @@
+Function esquerda(li As Integer, co As Integer) As Boolean
+    If co > 1 Then
+        If Cells(li, co).Borders(xlEdgeLeft).LineStyle = xlNone And Cells(li, co - 1) <> "I" Then 'And Cells(li, co - 1) <> "F" Then
+            esquerda = True
+        Else
+            esquerda = False
+        End If
+    Else
+        esquerda = False
+    End If
+End Function
