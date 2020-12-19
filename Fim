@@ -1,0 +1,27 @@
+Function Fim(fli As Integer, fco As Integer, L As Integer, C As Integer) As Boolean
+    If topo((fli), (fco)) Then
+        If Not IsEmpty(Cells(fli - 1, fco)) Then
+            Fim = False
+            Exit Function
+        End If
+    End If
+    If esquerda((fli), (fco)) Then
+        If Not IsEmpty(Cells(fli, fco - 1)) Then
+            Fim = False
+            Exit Function
+        End If
+    End If
+    If baixo((fli), (fco), (L)) Then
+        If Not IsEmpty(Cells(fli + 1, fco)) Then
+            Fim = False
+            Exit Function
+        End If
+    End If
+    If direita((fli), (fco), (C)) Then
+        If Not IsEmpty(Cells(fli, fco + 1)) Then
+            Fim = False
+            Exit Function
+        End If
+    End If
+    Fim = True
+End Function
