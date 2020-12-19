@@ -1,0 +1,11 @@
+Function direita(li As Integer, co As Integer, C As Integer) As Boolean
+    If co < C Then
+        If Cells(li, co).Borders(xlEdgeRight).LineStyle = xlNone And Cells(li, co + 1) <> "I" Then 'And Cells(li, co + 1) <> "F" Then
+            direita = True
+        Else
+            direita = False
+        End If
+    Else
+        direita = False
+    End If
+End Function
