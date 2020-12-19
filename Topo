@@ -1,0 +1,11 @@
+Function topo(li As Integer, co As Integer) As Boolean
+    If li > 1 Then
+        If Cells(li, co).Borders(xlEdgeTop).LineStyle = xlNone And Cells(li - 1, co) <> "I" Then 'And Cells(li - 1, co) <> "F" Then
+            topo = True
+        Else
+            topo = False
+        End If
+    Else
+        topo = False
+    End If
+End Function
