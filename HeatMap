@@ -1,0 +1,98 @@
+Sub HeatMap()
+    L = [AQ3]   'This is the Cell where you input the Width of the maze
+    If IsEmpty(L) Then
+        L = 10
+        [AQ3] = 10
+    End If
+    C = [AP3]   'This is the Cell where you input the Height of the maze
+    If IsEmpty(C) Then
+        C = 10  
+        [AP3] = 10
+    End If
+    For li = 1 To L
+        For co = 1 To C
+            If IsNumeric(Cells(li, co)) Then
+                Cells(li, co).ClearContents
+                Cells(li, co).Interior.Pattern = xlNone
+                Cells(li, co).Font.ThemeColor = xlThemeColorDark1
+            End If
+        Next
+    Next
+    Set mapa = Range("A1", Cells(L, C))
+    mapa.FormatConditions.AddColorScale ColorScaleType:=3
+    mapa.FormatConditions(1).ColorScaleCriteria(1).Type = xlConditionValueLowestValue
+    With mapa.FormatConditions(1).ColorScaleCriteria(1).FormatColor
+        .ThemeColor = xlThemeColorAccent1
+        .TintAndShade = 0
+    End With
+    mapa.FormatConditions(1).ColorScaleCriteria(2).Type = xlConditionValuePercentile
+    mapa.FormatConditions(1).ColorScaleCriteria(2).Value = 50
+    With mapa.FormatConditions(1).ColorScaleCriteria(2).FormatColor
+        .Color = 16635892
+        .TintAndShade = 0
+    End With
+    mapa.FormatConditions(1).ColorScaleCriteria(3).Type = xlConditionValueHighestValue
+    With mapa.FormatConditions(1).ColorScaleCriteria(3).FormatColor
+        .ThemeColor = xlThemeColorAccent2
+        .TintAndShade = 0
+    End With
+    For li = 1 To L
+        For co = 1 To C
+            If Cells(li, co) = "I" Then
+                If topo((li), (co)) Then
+                    Cells(li - 1, co) = 1
+                End If
+                If esquerda((li), (co)) Then
+                    Cells(li, co - 1) = 1
+                End If
+                If baixo((li), (co), (L)) Then
+                    Cells(li + 1, co) = 1
+                End If
+                If direita((li), (co), (C)) Then
+                    Cells(li, co + 1) = 1
+                End If
+            End If
+            If Cells(li, co) = "F" Then
+                fli = li
+                fco = co
+            End If
+        Next
+    Next
+    While Fim((fli), (fco), (L), (C))
+        For li = 1 To L
+            For co = 1 To C
+                If Not IsEmpty(Cells(li, co)) And IsNumeric(Cells(li, co)) Then
+                    If topo((li), (co)) Then
+                        If (Cells(li - 1, co) > Cells(li, co) + 1 Or IsEmpty(Cells(li - 1, co))) And Cells(li - 1, co) <> "F" Then
+                            Cells(li - 1, co) = Cells(li, co) + 1
+                        End If
+                    End If
+                    If esquerda((li), (co)) Then
+                        If (Cells(li, co - 1) > Cells(li, co) + 1 Or IsEmpty(Cells(li, co - 1))) And Cells(li, co - 1) <> "F" Then
+                            Cells(li, co - 1) = Cells(li, co) + 1
+                        End If
+                    End If
+                    If baixo((li), (co), (L)) Then
+                        If (Cells(li + 1, co) > Cells(li, co) + 1 Or IsEmpty(Cells(li + 1, co))) And Cells(li + 1, co) <> "F" Then
+                            Cells(li + 1, co) = Cells(li, co) + 1
+                        End If
+                    End If
+                    If direita((li), (co), (C)) Then
+                        If (Cells(li, co + 1) > Cells(li, co) + 1 Or IsEmpty(Cells(li, co + 1))) And Cells(li, co + 1) <> "F" Then
+                            Cells(li, co + 1) = Cells(li, co) + 1
+                        End If
+                    End If
+                End If
+            Next
+        Next
+    Wend
+    Call PathFinder((fli), (fco), (L), (C))
+    For li = 1 To L
+        For co = 1 To C
+            If IsNumeric(Cells(li, co)) Then
+                Cells(li, co).ClearContents
+            End If
+        Next
+    Next
+    mapa.FormatConditions.Delete
+End Sub
