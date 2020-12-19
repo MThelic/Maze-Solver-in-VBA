@@ -1,0 +1,11 @@
+Function baixo(li As Integer, co As Integer, L As Integer) As Boolean
+    If li < L Then
+        If Cells(li, co).Borders(xlEdgeBottom).LineStyle = xlNone And Cells(li + 1, co) <> "I" Then 'And Cells(li + 1, co) <> "F" Then
+            baixo = True
+        Else
+            baixo = False
+        End If
+    Else
+        baixo = False
+    End If
+End Function
