@@ -1,0 +1,91 @@
+Sub PathFinder(fli As Integer, fco As Integer, L As Integer, C As Integer)
+    For i = 1 To Application.WorksheetFunction.Max(Cells)
+        For j = -1 To 1
+            For jt = -1 To 1
+                If (j = 0 Or jt = 0) And fli + j > 0 And fco + jt > 0 Then
+                    If Cells(fli + j, fco + jt) = "I" Then
+                        If j = -1 Then
+                            If topo((fli), (fco)) Then
+                                Exit Sub
+                            End If
+                        End If
+                        If jt = -1 Then
+                            If esquerda((fli), (fco)) Then
+                                Exit Sub
+                            End If
+                        End If
+                        If j = 1 Then
+                            If baixo((fli), (fco), L) Then
+                                Exit Sub
+                            End If
+                        End If
+                        If jt = 1 Then
+                            If direita((fli), (fco), C) Then
+                                Exit Sub
+                            End If
+                        End If
+                    End If
+                End If
+            Next
+        Next
+        If topo((fli), (fco)) Then
+            If Not IsEmpty(Cells(fli - 1, fco)) And IsNumeric(Cells(fli - 1, fco)) Then
+                vtop = Cells(fli - 1, fco)
+            Else
+                vtop = 99999
+            End If
+        Else
+            vtop = 99999
+        End If
+        If esquerda((fli), (fco)) Then
+            If Not IsEmpty(Cells(fli, fco - 1)) And IsNumeric(Cells(fli, fco - 1)) Then
+                vesq = Cells(fli, fco - 1)
+            Else
+                vesq = 99999
+            End If
+        Else
+            vesq = 99999
+        End If
+        If baixo((fli), (fco), (L)) Then
+            If Not IsEmpty(Cells(fli + 1, fco)) And IsNumeric(Cells(fli + 1, fco)) Then
+                vbai = Cells(fli + 1, fco)
+            Else
+                vbai = 99999
+            End If
+        Else
+            vbai = 99999
+        End If
+        If direita((fli), (fco), (C)) Then
+            If Not IsEmpty(Cells(fli, fco + 1)) And IsNumeric(Cells(fli, fco + 1)) Then
+                vdir = Cells(fli, fco + 1)
+            Else
+                vdir = 99999
+            End If
+        Else
+            vdir = 99999
+        End If
+        vmin = Application.WorksheetFunction.Min(vtop, vesq, vbai, vdir)
+        If vmin = 99999 Then
+            Exit Sub
+        End If
+        If vmin = vtop Then
+            fli = fli - 1
+        Else
+            If vmin = vesq Then
+                fco = fco - 1
+            Else
+                If vmin = vbai Then
+                    fli = fli + 1
+                Else
+                    fco = fco + 1
+                End If
+            End If
+        End If
+        Cells(fli, fco).Interior.Color = 13750992
+        With Cells(fli, fco).Font
+            .Color = 0
+            .Bold = True
+            .Size = 11
+        End With
+    Next
+End Sub
